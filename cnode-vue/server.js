@@ -9,6 +9,7 @@ config.entry.unshift('webpack-dev-server/client?http://localhost:8090', "webpack
 config.plugins.push(new webpack.HotModuleReplacementPlugin());
 
 // 这里配置：请求http://localhost:8090/api，
+// 必须是和上面的一样的请求路径否则无法代理，publicPath是无法代理直接指向webpack-dev-server打包的内存的
 // 相当于通过本地node服务代理请求到了http://cnodejs.org/api
 var proxy = [{
     path: "/api/*",
