@@ -11,10 +11,13 @@ var isProduction = function() {
 var plugins = [
     //提公用js到common.js文件中
     new webpack.optimize.CommonsChunkPlugin('common.js'),
-    //将样式统一发布到style.css中
+    //将样式统一发布到style.css中,要结合下面的ExtractTextPlugin.extract方法一起使用，这里下面的配置表示对.css文件和.scss文件进行提取
+    // 内嵌在模块中的样式不再提取，注意这里所有的样式文件的引入都在views/index.vue文件中引入的
+    // new ExtractTextPlugin("[name].css")   表示每一个引入的外联样式文件都会不采取内联形式而是以link形式引入
+    // 对于自己模块内些的style内嵌标签实际上是不使用该加载器的而是使用node-sass模块自动加载的
     new ExtractTextPlugin("style.css", {
-        allChunks: true,      //当css没有被抽离时，加载器不应该使用（例如：当allChunks:false时，在一个additional 的chunk中）
-        disable: false
+        allChunks: true,      //表示对所有的打包文件进行样式提取合并默认false
+        disable: false        //表示不禁用插件默认是false，改为true的话就不能用加载器了就不能打包了
     }),
     // 使用 ProvidePlugin 加载使用率高的依赖库
     new webpack.ProvidePlugin({
@@ -38,7 +41,7 @@ module.exports = {
     output: {
         path: __dirname + buildPath,
         filename: 'build.js',
-        publicPath: publishPath,
+        publicPath: publishPath,  //所有生成的图片路径还是引入路径什么的都是以这个地址为准
         // filename: '[name].build.js',
         chunkFilename:"[id].build.js?[chunkhash]"
     },
@@ -53,7 +56,10 @@ module.exports = {
         }, {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract(
-                "style-loader", "css-loader?sourceMap!cssnext-loader")          //可能是没有被提取出来的用style-loader加载
+                "style-loader", "css-loader?sourceMap!cssnext-loader")     
+            //第一个参数是经过编译后通过style-loader单独提取出文件来，而第二个参数就是用来编译代码的loader
+            //nextCSS是css的转译器,根据目前仍处于草案阶段、未被浏览器实现的标准把代码转译成符合目前浏览器实现的CSS
+            // 类似 ES6 的 Babel。转译时因为也要处理前缀问题，所以直接依赖了 Autoprefixer 来做这个部分
         }, {
             test: /\.js$/,
             exclude: /node_modules|vue\/dist/,

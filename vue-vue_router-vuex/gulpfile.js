@@ -19,7 +19,7 @@ gulp.task('clean', ['upload'], function (callback) {
 const webpack = require('webpack')
 const webpackConfig = require('./webpack.config')
 gulp.task('build', function (callback) {
-    console.log('## 代码编译开始')
+    console.log('## 代码编译开始')    
     webpack(webpackConfig, function (err, state) {
         console.log('## 代码编译完成')
         callback(err)

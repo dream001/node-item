@@ -27,7 +27,7 @@
 |   |-- template                     // 各种html文件
 |       |-- index.html               // 程序入口html文件
 |   |-- util                         // 公共的js方法，vue的mixin混合
-|   |-- app.vue                      // 页面入口文件
+|   |-- app.vue                      // 页面入口文件,路由顶层文件引入
 |   |-- main.js                      // 程序入口文件，加载各种公共组件
 |-- .babelrc                         // ES6语法编译配置
 |-- gulpfile.js                      // 启动，打包，部署，自动化构建

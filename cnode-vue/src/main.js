@@ -54,7 +54,7 @@ let app = Vue.extend({});
 routerMap(router);
 
 router.start(app, "#app");
-
+// vue-router2.0中router.map等方法已经被抛弃
 
 // 上面实例化路由的参数介绍：
 // 路由选项名            默认值            作用

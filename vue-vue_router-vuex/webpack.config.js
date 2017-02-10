@@ -21,9 +21,14 @@ if (IS_ENV) { //生产环境
 
 plugins.push(
     new HtmlWebpackPlugin({ //根据模板插入css/js等生成最终HTML,即下面打包后的js文件会自动以script标签的形式引入
-        filename: './index.html', //生成的html存放路径，相对于 path
+        filename: './index.html', //生成的html存放路径，这个路径是相对于 path
         template: './src/template/index.html', //html模板路径
     })
+    // 可以多new几个这样的东西来生成多个文件
+    // new HtmlWebpackPlugin({  
+    //   filename: 'test.html',
+    //   template: 'src/assets/test.html'
+    // })
 )
 
 
@@ -32,7 +37,8 @@ module.exports = {
     output: {
         publicPath: config.publicPath, //服务器的路径
         path: path.resolve(__dirname + config.publicPath), //编译到app目录
-        filename: '[name].js' //编译后的文件名,对应有四个页面文件，所以除了会打包出main.js文件还会打出1.1.js 2.2.js 3.3.js 4.4.js
+        filename: '[name].bundle.js' ,//编译后的文件名,对应有四个页面文件，所以除了会打包出main.js文件还会打出1.1.js 2.2.js 3.3.js 4.4.js
+        chunkFilename: "[id].bundle.js"
     },
     module: {
         loaders: [

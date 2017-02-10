@@ -11,7 +11,13 @@ export default [
             {
                 path: '/login', 
                 meta: { auth: false },     //这是路由元信息，会被记录到$route.matched 数组
-                component: resolve => require(['../pages/login/'], resolve)
+                // component: resolve => require(['../pages/login/'], resolve)
+                // resolve参数是用来触发渲染的参数，不传的话就不会渲染，这里的异步懒加载有好几种写法
+                component: function(resolve) {
+                    require(['../pages/login/'],function(form){
+                        resolve(form)
+                    })
+                }
             },
             {
                 path: '/signout',
@@ -35,13 +41,16 @@ export default [
 ]
 
 
+// 对于我们这个应用也是用的懒加载，main.bundle.js是一打开页面就会引入加载，之后根据进入哪个路由加载渲染相应页面也就是这里的各个
+// chunk文件如1.bundle.js,2.bundle.js,3.bundle.js,4.bundle.js,已经加载过得就会被缓存不会下一次跳入后缓存了
+
 
 // 路由懒加载
 // 当打包构建应用时，Javascript 包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问
 // 的时候才加载对应组件，这样就更加高效了。结合 Vue 的 异步组件 和 Webpack 的 code splitting feature, 轻松实现路由组件的懒加载。
 // 我们要做的就是把路由对应的组件定义成异步组件：
 //     const Foo = resolve => {
-//       // require.ensure 是 Webpack 的特殊语法，用来设置 code-split point
+//       // require.ensure 是 Webpack 的特殊语法，用来设置 code-split point,注意它只是加载了并不执行要想执行必须在里面require一下
 //       // （代码分块）
 //       require.ensure(['./Foo.vue'], () => {
 //         resolve(require('./Foo.vue'))
@@ -56,5 +65,6 @@ export default [
     // const Bar = r => require.ensure([], () => r(require('./Bar.vue')), 'group-foo')
     // const Baz = r => require.ensure([], () => r(require('./Baz.vue')), 'group-foo')
 // Webpack 将相同 chunk 下的所有异步模块打包到一个异步块里面 —— 这也意味着我们无须明确列出 require.ensure 的依赖（传空数组就行）
+//上述如果没有加入第三个参数就会产生多个chunk包，加入之后会打进一个叫group-foo.min.js的包
 
 

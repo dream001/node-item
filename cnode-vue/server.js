@@ -10,7 +10,7 @@ config.plugins.push(new webpack.HotModuleReplacementPlugin());
 
 // 这里配置：请求http://localhost:8090/api，
 // 必须是和上面的一样的请求路径否则无法代理，publicPath是无法代理直接指向webpack-dev-server打包的内存的
-// 相当于通过本地node服务代理请求到了http://cnodejs.org/api
+// 相当于通过本地webpack-dev-server服务代理请求到了http://cnodejs.org/api
 var proxy = [{
     path: "/api/*",
     target: "https://cnodejs.org",
@@ -27,10 +27,9 @@ var proxy = [{
 //启动服务
 var app = new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
-    hot:true,                                  
-    //启用hot之后后台代码的改变只改变需要改的部分，不刷新浏览器，默认是false,改变重刷浏览器。对于vue来说实际上true的时候已经检测到改
-    //变了都打包了已经，但是你要是改样式什么的它立马就改了，但是却无法渲染页面出来了还是得手动刷新浏览器，所以有时候还不如改为false,
-    //但是如果你改入口文件它就会重刷整个页面了，因为基本上已经全部重新渲染挂载了
+    // hot:true,                                  
+    //启用hot之后后台代码的改变只改变需要改的部分，不刷新浏览器，默认是false,改变重刷浏览器
+    // 这里的热模块替换不管用？已经检测到更改并编译了但是无法更新还是得手动刷新浏览器
     historyApiFallback: true,
     proxy:proxy
 });
