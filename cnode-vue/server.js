@@ -26,7 +26,7 @@ var proxy = [{
 // }
 //启动服务
 var app = new WebpackDevServer(webpack(config), {
-    publicPath: config.output.publicPath,
+    publicPath: config.output.publicPath,     //所有生成的图片也好引入的js也好都是以这个路径去写进标签的
     // hot:true,                                  
     //启用hot之后后台代码的改变只改变需要改的部分，不刷新浏览器，默认是false,改变重刷浏览器
     // 这里的热模块替换不管用？已经检测到更改并编译了但是无法更新还是得手动刷新浏览器
